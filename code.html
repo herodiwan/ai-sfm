@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Financial Dashboard</title>
+  <style>
+    body {
+      background: #fff;
+      color: #000;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 24px;
+      background: #fff;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      border-radius: 8px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    h1 {
+      margin: 0 0 16px 0;
+      color: #000; 
+      font-size: 3.5em;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    h2, h3 {
+      margin: 0 0 16px 0;
+      color: #000;
+    }
+    .glow-slide {
+      text-shadow:
+        0 0 8px #222,
+        0 0 15px #444,
+        0 0 25px #000,
+        0 0 40px #111;
+      animation: slideInFromLeft 1s ease-out 0s 1, glowBlack 1.5s ease-in-out infinite alternate;
+      opacity: 1;
+      display: inline-block;
+    }
+    @keyframes slideInFromLeft {
+      from { opacity: 0; transform: translateX(-120px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes glowBlack {
+      from {
+        text-shadow:
+          0 0 8px #111,
+          0 0 15px #222,
+          0 0 25px #333,
+          0 0 40px #444;
+      }
+      to {
+        text-shadow:
+          0 0 15px #000,
+          0 0 30px #111,
+          0 0 45px #222,
+          0 0 60px #333;
+      }
+    }
+    .search-section {
+      border: 1px solid #eee;
+      padding: 20px;
+      margin-bottom: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      background-color: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .search-section h2 {
+      margin-bottom: 15px;
+    }
+    .search-input-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    .search-section input[type="text"] {
+      padding: 8px;
+      width: 250px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .search-section button {
+      padding: 9px 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      background-color: #41a844;
+      color: white;
+      cursor: pointer;
+    }
+    .search-section button:hover {
+      background-color: #369a3a;
+    }
+    .search-result {
+      margin-top: 20px;
+      font-size: 16px;
+      width: 100%;
+      max-width: 600px;
+    }
+    .search-result table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    .search-result th, .search-result td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    .search-result th {
+      background-color: #f4f4f4;
+    }
+    .search-result tr {
+      cursor: pointer;
+    }
+    .search-result tr:hover {
+      background-color: #d0f0fd;
+    }
+    .dashboard {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .dashboard-section {
+      flex: 1 1 250px;
+      background: #fff;
+      padding: 24px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .alert {
+      padding: 12px;
+      background: #ffe6e6;
+      color: #d00;
+      border-radius: 4px;
+      margin-bottom: 18px;
+    }
+    .progress-bar {
+      width: 100%;
+      background: #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+    .progress {
+      height: 16px;
+      background: #41a844;
+      width: 55%;
+      transition: width 0.3s;
+    }
+    .footer {
+      text-align: center;
+      padding-top: 24px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1 class="glow-slide">AI Financial Dashboard</h1>
+      <h3>Automated Expense Categorization | Predictive Analytics | Goal Tracking | Budget Alerts</h3>
+    </header>
+    <div class="search-section">
+      <h2>Student Details Search</h2>
+      <div class="search-input-group">
+        <input type="text" id="searchInput" placeholder="Enter Student Name or ID" />
+        <button onclick="searchStudent()">Search</button>
+      </div>
+      <div class="search-result" id="searchResult"></div>
+    </div>
+    <div class="dashboard">
+      <section class="dashboard-section">
+        <h2>Expense Overview</h2>
+        <p>Total Expenses (Sept): ₹12,540</p>
+        <p>Top Categories: Food, Transport, Shopping</p>
+        <div class="alert">Alert: Transport spending up 35% vs last month!</div>
+      </section>
+      <section class="dashboard-section">
+        <h2>Predictive Analysis</h2>
+        <p>Your spending is forecasted to increase by 15% next month.</p>
+        <p>Projected cash flow: <b>₹32,000</b></p>
+        <canvas id="predictionChart" width="320" height="180"></canvas>
+      </section>
+      <section class="dashboard-section">
+        <h2>Financial Goals</h2>
+        <p>Emergency Fund: ₹50,000 of ₹1,00,000 goal</p>
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <p>New Laptop: ₹28,000 of ₹60,000 goal</p>
+        <div class="alert">Alert: At current pace, you may miss your laptop goal.</div>
+      </section>
+    </div>
+    <div class="dashboard-section">
+      <h2>Budget Breakdown</h2>
+      <table width="100%" border="1" style="border-collapse:collapse;">
+        <tr><th>Category</th><th>Budgeted</th><th>Actual</th><th>Status</th></tr>
+        <tr><td>Food</td><td>₹5,000</td><td>₹4,400</td><td>Ok</td></tr>
+        <tr><td>Transport</td><td>₹2,000</td><td>₹2,700</td><td><span style="color:#d00;">Over</span></td></tr>
+        <tr><td>Shopping</td><td>₹4,000</td><td>₹5,440</td><td><span style="color:#d00;">Over</span></td></tr>
+      </table>
+    </div>
+    <div class="footer">
+      &copy; 2025 | AI Financial Tool
+    </div>
+  </div>
+  <script>
+    const students = [
+      { id: 'S001', name: 'Alice Johnson', age: 20, course: 'Computer Science' },
+      { id: 'S002', name: 'Bob Smith', age: 22, course: 'Business Administration' },
+      { id: 'S003', name: 'Charlie Lee', age: 19, course: 'Mechanical Engineering' },
+      { id: 'S004', name: 'Diana Patel', age: 21, course: 'Biotechnology' }
+    ];
+    function searchStudent() {
+      const query = document.getElementById('searchInput').value.trim().toLowerCase();
+      const resultDiv = document.getElementById('searchResult');
+      if (!query) {
+        resultDiv.innerHTML = '<p>Please enter a student name or ID.</p>';
+        return;
+      }
+      const found = students.filter(s =>
+        s.name.toLowerCase().includes(query) ||
+        s.id.toLowerCase() === query
+      );
+      if (found.length === 0) {
+        resultDiv.innerHTML = '<p>No matching student details found.</p>';
+      } else {
+        let html = `<table>
+          <thead><tr><th>ID</th><th>Name</th><th>Age</th><th>Course</th></tr></thead><tbody>`;
+        found.forEach((s, idx) => {
+          html += `<tr data-idx="${idx}">
+            <td>${s.id}</td>
+            <td>${s.name}</td>
+            <td>${s.age}</td>
+            <td>${s.course}</td>
+          </tr>`;
+        });
+        html += '</tbody></table>';
+        resultDiv.innerHTML = html;
+
+        // Add click event to rows
+        const rows = resultDiv.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+          row.addEventListener('click', () => {
+            const i = row.getAttribute('data-idx');
+            const student = found[i];
+            alert(Student Details:\nID: ${student.id}\nName: ${student.name}\nAge: ${student.age}\nCourse: ${student.course});
+          });
+        });
+      }
+    }
+  </script>
+</body>
+</html>
